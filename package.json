@@ -1,0 +1,20 @@
+{
+  "name": "see-other",
+  "version": "0.1.0",
+  "description": "Very cachable web3 websites over web2",
+  "main": "see-other.js",
+  "scripts": {
+    "start": "npx rexreplace 'location.hostname' '\\\"blog.ipfs.io\\\"' see-other.js -o > example/see-other.js; npx serve example",
+    "test": "say sorry"
+  },
+  "keywords": [
+    "ipfs",
+    "permenant",
+    "cache",
+    "service",
+    "worker",
+    "perf"
+  ],
+  "author": "olizilla",
+  "license": "MIT"
+}
