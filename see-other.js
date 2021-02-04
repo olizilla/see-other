@@ -1,7 +1,7 @@
 /* 
- * see-other! redirecting subresource requestt to their permenent web3 alternatives.
+ * see-other! redirecting subresource requests to their permanent web3 alternatives.
  * 
- * WARNING: service workers isolated and stateless and hard to debug... 
+ * WARNING: service workers are isolated and stateless and hard to debug... 
      - dont try and update global variables.
  *   - we can't access localStorage.
  *   - we can access IndexedDb (gross)
