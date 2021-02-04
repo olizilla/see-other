@@ -2,16 +2,16 @@
  * see-other! redirecting subresource requests to their permanent web3 alternatives.
  * 
  * WARNING: service workers are isolated and stateless and hard to debug... 
-     - dont try and update global variables.
+ *   - dont try and update global variables.
  *   - we can't access localStorage.
  *   - we can access IndexedDb (gross)
  *   - we can access the Cache api...
  * 
  * So:
- * - get dnslink from Cache
+ *   - get dnslink from Cache
  *   - if missing fetch dnslink from api
- * - if dnslink older than x update dnslink
- * - redirect resource url to cid url
+ *   - if dnslink older than x update dnslink
+ *   - redirect resource url to cid url
  */
 
  // insert your prefered IPFS gateway here
