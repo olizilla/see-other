@@ -1,16 +1,16 @@
 # [See Other]! 😑 → 🤖
 
-A [service worker] for *very cachable web3 websites over web2*
+A simple [service worker] for *very cachable web3 websites over web2*
 
-> You want to host your website on IPFS, and your want it to work nicely over https. You set up a dnslink record and point your domain at an IPFS gateway and it all works! RAD! 
+> You want to host your website on IPFS, and you want it to work nicely over https. You set up a dnslink record and point your domain at an IPFS gateway and it all works! RAD! 
 >
-> but look at those cache headers 😑 ...they could be `permenant` but you playin' (with mutable urls) 
+> but look at those cache headers 😑 ...they could be `permanent` but you playin' (with mutable urls) 
 
-If you ask an IPFS gateway to translate a mutable url to the permenant dnslink/cid one, you can't cache the response! *What if a service worker transparently redirected all requests to the content addressed version behind the scenes!*
+If you ask an IPFS gateway to translate a mutable url to the permanent dnslink/cid one, you can't cache the response! *What if a service worker transparently redirected all requests to the content addressed version behind the scenes!*
 
-The see-other service worker looks up the [dnslink] for your site and redirects request for `https://mysite.com/big.jpg` to the cache friendly `https://ipfs.io/ipfs/<cid>/big.jpg` url. Much like the gateway would do, but by doing it on the client you can cache the heck out of those responses 👨‍🍳👌✨
+The see-other service worker looks up the [dnslink] for your site and redirects request for `https://mysite.com/big.jpg` to the cache friendly `https://ipfs.io/ipfs/<cid>/big.jpg` url. Much like the gateway would do, but by doing it on the client means you can cache the heck out of those responses 👨‍🍳👌✨
 
-With a minor abuse of the [Cache] api, it handles periodically refreshing dnslink too.
+With a minor abuse of the [Cache] api, it handles periodically refreshing the dnslink too.
 
 If you are totally lost, then https://blog.fleek.co/posts/immutable-ipfs is a good primer on permenant vs mutable URs
 
@@ -44,17 +44,22 @@ The very first page load will fetch and install the service worker. It will look
 
 When you navigate to the next page, the service worker will be in control and all image/css/js requests will be redirected to `https://ipfs.io/<current cid from dnslink>/path/to/thing`, which come with the `permenant` cache header.
 
-By the third page view, you are now using the permenanently cached local versions of all resources you've seen before and completly skipping the network requests. 👨‍🍳👌✨
+By the third page view, you are now using the permenanently cached local versions of all resources you've seen before and completly skipping the network requests.
 
 
 ## What the hack?
 
 The current dnslink for the site is fetched via `https://ipfs.io/api/v0/dns?arg=<current domain>` when the service worker starts up. Service workers are stateless and isolated from the DOM, so we can't store the current dnslink in a global variable, nor in localstorage. We do have access to the [Cache] api, so we save a copy of the dnslink response there, so we dont have to fetch if for every request.
 
-But with great caching comes cache invalidation. A simple path is to just re-check the dnslink periodically. The Cache api preserves the heeders of the request, so in theory we could grab the `date` header from the response and see how old it is. But CORS strikes again! As the dnslink api request is cross-origin, we dont get to see the headers. It's an [opaque response].
+But with great caching comes cache invalidation. We take the simple path and re-check the dnslink periodically. The Cache api preserves the headers of the request, so in theory we could grab the `date` header from the response and see how old it is. But CORS strikes again! As the dnslink api request is cross-origin, we dont get to see the `date` header. It's not [on the list](https://fetch.spec.whatwg.org/#cors-safelisted-response-header-name)
 
-However, we can copy the Reponse and just new up our very own headers for it, as we just want know how long this entry has been in the cache, so we add a `x-cached-at` header, and check that on every request to determine when dnslink is too old and we should check again.
+However, we can copy the `Response` and just new up our very own `Headers` for it, as we just want know how long this entry has been in the cache, so we add a `x-cached-at` header, and check that on every request to determine when dnslink is too old and we should check again.
 
+## Related work
+
+See [@gozala](https://github.com/gozala)'s amazing work in getting the real js-ipfs running in a [service worker](https://github.com/ipfs/js-ipfs/tree/master/examples/browser-service-worker). see-other aims at the other end of that spectum, where you just want a small perf improvement for a IPFS hosted static website.
+
+If you want your browser to do this kind of opportunistic local caching for you for any domain with a dnslink, use [ipfs-companion]
 
 ## References
 
@@ -71,3 +76,4 @@ However, we can copy the Reponse and just new up our very own headers for it, as
 [Cache]: https://developer.mozilla.org/en-US/docs/Web/API/Cache
 [ipfs-companion]: https://github.com/ipfs-shipyard/ipfs-companion
 [dnslink]: https://docs.ipfs.io/concepts/dnslink/#publish-using-a-subdomain
+[opaque response]: 
