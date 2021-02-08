@@ -12,7 +12,7 @@ The see-other service worker looks up the [dnslink] for your site and redirects 
 
 With a minor abuse of the [Cache] api, it handles periodically refreshing the dnslink too.
 
-If you are totally lost, then https://blog.fleek.co/posts/immutable-ipfs is a good primer on permenant vs mutable URs
+If you are totally lost, then https://blog.fleek.co/posts/immutable-ipfs is a good primer on permenant vs mutable URLs
 
 ## Getting started
 
@@ -20,7 +20,7 @@ If you are totally lost, then https://blog.fleek.co/posts/immutable-ipfs is a go
 
 - Copy `see-other.js` into the root of your static website project. Edit as you see fit.
 - Register the service worker from a script tag or your main js bundle.
-```
+```js
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('see-other.js');
 }
