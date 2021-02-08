@@ -35,7 +35,7 @@ const STALE_AFTER_MS = 1000 * 60 * 60 // 1hr
  *
  * @param {LifecycleEvent} event 
  */
-const oninstall = async (event) => {
+const oninstall = (event) => {
   event.waitUntil(event.target.skipWaiting())
 }
 
@@ -44,7 +44,7 @@ const oninstall = async (event) => {
  * you'll get an activate event. But that doesn't mean the page that called .register() will be controlled.
  * @param {LifecycleEvent} event 
  */
-const onactivate = async (event) => {
+const onactivate = (event) => {
   console.log('🤖 onactivate', event)
   // We want to start handling requests right away, so that requests from the
   // very first page will be handled by service worker. Which is why we claim
